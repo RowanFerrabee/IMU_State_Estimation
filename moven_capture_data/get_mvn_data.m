@@ -14,7 +14,7 @@ function [new_struct] = get_mvn_data(orig_struct)
     new_struct.time = zeros(num_frames, 1);
     new_struct.position = zeros(num_frames, 3*num_segments);
     new_struct.orientation = zeros(num_frames, 4*num_segments);
-    new_struct.joint_angles = zeros(num_frames, num_joints);
+    new_struct.joint_angles = zeros(num_frames, 3*num_joints);
     new_struct.joint_angles_xzy = zeros(num_frames, 3*num_joints);
     new_struct.sensor_orientation = zeros(num_frames, 4*num_sensors);
     new_struct.sensor_acceleration = zeros(num_frames, 3*num_sensors);
@@ -45,11 +45,12 @@ function [new_struct] = get_mvn_data(orig_struct)
             end
             
             joint_angle_strings = split(frames{i}.jointAngle.Text, ' ');
-            if (length(joint_angle_strings) == num_joints)
+            if (length(joint_angle_strings) == 3*num_joints)
                 new_struct.joint_angles(i,:) = str2double(joint_angle_strings)';
             end
             
             joint_angles_xzy_strings = split(frames{i}.jointAngleXZY.Text, ' ');
+            joint_angles_xzy_strings = joint_angles_xzy_strings(~strcmp(joint_angles_xzy_strings,''));
             if (length(joint_angles_xzy_strings) == 3*num_joints)
                 new_struct.joint_angles_xzy(i,:) = str2double(joint_angles_xzy_strings)';
             end
